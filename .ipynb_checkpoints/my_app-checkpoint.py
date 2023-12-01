@@ -96,26 +96,49 @@ class MyApp:
                             ;"""
         results = self.db.run_query(sql=self.query, params=(self.state_choice, self.session_choice))
         errors = self.db.run_query(sql=self.errors_query, params=(self.state_choice, self.session_choice))
-        if (results.iloc[0]['content'] is None):
-            if errors.iloc[0]['error'] == 'connection': 
-                return st.error("We could not retreive the contents of this bill due to a connection error. Check if the from " +
-                                str(self.state_choice) + "'s " + str(self.session_choice) + " session docket has moved.") 
-            elif errors.iloc[0]['error'] == 'bad_url':
-                return st.error("We could not retreive the contents of this bill due to a bad url. Check if the from " +
-                                str(self.state_choice) + "'s " + str(self.session_choice) + " session docket has moved.")
-            elif errors.iloc[0]['error'] == 'timeout':
-                return st.error("We could not retreive the contents of this bill due to session timeout. Check if the from " +
-                                str(self.state_choice) + "'s " + str(self.session_choice) + " session docket has moved.")
-            elif errors.iloc[0]['error'] == 'timeout':
-                try: 
-                    self.retrieve_bill_text()
-                except: 
-                    return st.error("We could not retreive the contents of this bill due to an Apache Tika error. Check if the from " +
-                                str(self.state_choice) + "'s " + str(self.session_choice) + " session docket has moved.")
+        if results.shape[0] == 1:
+            if (results.iloc[0]['content'] is None):
+                if errors.iloc[0]['error'] == 'connection': 
+                    return st.error("We could not retreive the contents of this bill due to a connection error. Check if the from " +
+                                    str(self.state_choice) + "'s " + str(self.session_choice) + " session docket has moved.") 
+                elif errors.iloc[0]['error'] == 'bad_url':
+                    return st.error("We could not retreive the contents of this bill due to a bad url. Check if the from " +
+                                    str(self.state_choice) + "'s " + str(self.session_choice) + " session docket has moved.")
+                elif errors.iloc[0]['error'] == 'timeout':
+                    return st.error("We could not retreive the contents of this bill due to session timeout. Check if the from " +
+                                    str(self.state_choice) + "'s " + str(self.session_choice) + " session docket has moved.")
+                elif errors.iloc[0]['error'] == 'timeout':
+                    try: 
+                        self.retrieve_bill_text()
+                    except: 
+                        return st.error("We could not retreive the contents of this bill due to an Apache Tika error. Check if the from " +
+                                    str(self.state_choice) + "'s " + str(self.session_choice) + " session docket has moved.")
+                else: 
+                    pass
             else: 
-                pass
+                return stx.scrollableTextbox(results.iloc[0]['content'], height=400)
         else: 
-            return stx.scrollableTextbox(results.iloc[0]['content'], height=400)
+            for i in range(results.shape[0]): 
+                if (results.iloc[0]['content'] is None):
+                    if errors.iloc[0]['error'] == 'connection': 
+                        return st.error("We could not retreive the contents of this bill due to a connection error. Check if the from " +
+                                        str(self.state_choice) + "'s " + str(self.session_choice) + " session docket has moved.") 
+                    elif errors.iloc[0]['error'] == 'bad_url':
+                        return st.error("We could not retreive the contents of this bill due to a bad url. Check if the from " +
+                                        str(self.state_choice) + "'s " + str(self.session_choice) + " session docket has moved.")
+                    elif errors.iloc[0]['error'] == 'timeout':
+                        return st.error("We could not retreive the contents of this bill due to session timeout. Check if the from " +
+                                        str(self.state_choice) + "'s " + str(self.session_choice) + " session docket has moved.")
+                    elif errors.iloc[0]['error'] == 'tika':
+                        try: 
+                            self.retrieve_bill_text()
+                        except: 
+                            return st.error("We could not retreive the contents of this bill due to an Apache Tika error. Check if the from " +
+                                        str(self.state_choice) + "'s " + str(self.session_choice) + " session docket has moved.")
+                    else: 
+                        pass
+                else: 
+                    return stx.scrollableTextbox(results.iloc[0]['content'], height=400)
 
     def streamlit_defaults(self):
         '''
