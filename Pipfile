@@ -9,6 +9,7 @@ requests = "*"
 tika = "*"
 ipython = "*"
 streamlit = "*"
+streamlit-scrollable-textbox = "*"
 
 [dev-packages]
 
