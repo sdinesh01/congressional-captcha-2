@@ -16,10 +16,10 @@ class MyApp:
 
     # main build_page method
     def build_page(self):
-        st.write('# Legislation tracker')
+        st.write('# Tracking state and federal legislation, 2012-2023')
         
         st.sidebar.header('State and session selection')
-        st.write("I'm just trying to get something to show up here!!!")
+        st.write("Use the dropdown menus on the side to select a state and legislative session. The options available represent a random sample of the dataset. The final version of this application will analyze key words and topics from bill texts that the app is able to retrieve; *data from legislative sessions over two years ago may have moved or may no longer exist*.")
         self.select_state()
         self.select_session()
         
@@ -32,8 +32,7 @@ class MyApp:
                 else: 
                     main_screen.empty()
                     with main_screen.container():
-                        #self.build_database.clear()
-                        self.get_bills()
+                        self.refresh_bills_dataframe()
                         self.get_bill_text()
         
         self.streamlit_defaults()
@@ -66,6 +65,14 @@ class MyApp:
                 ;"""
         self.results = self.db.run_query(sql=self.query, params=(self.state_choice, self.session_choice))
         return st.dataframe(self.results)
+    
+    def refresh_bills_dataframe(self): 
+        self.query = """ SELECT * 
+                FROM tBills
+                WHERE state = (?) AND session = (?)
+                ;"""
+        results = self.db.run_query(sql=self.query, params=(self.state_choice, self.session_choice))
+        return st.dataframe(results)
     
     def retrieve_bill_text(self):
         try:
@@ -138,7 +145,7 @@ class MyApp:
                     else: 
                         pass
                 else: 
-                    return stx.scrollableTextbox(results.iloc[0]['content'], height=400)
+                    return stx.scrollableTextbox(results.iloc[i]['content'], height=400)
 
     def streamlit_defaults(self):
         '''

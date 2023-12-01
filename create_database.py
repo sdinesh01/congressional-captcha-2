@@ -66,7 +66,7 @@ class MyDB:
         return
     
     def connect(self):
-        self.conn = sqlite3.connect(self.path_db, isolation_level=None)
+        self.conn = sqlite3.connect(self.path_db, isolation_level=None, check_same_thread=False)
         self.curs = self.conn.cursor()
         return 
     
