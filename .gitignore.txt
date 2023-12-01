@@ -1,1 +1,2 @@
 /data/legislation.db
+/data/bills-with-urls.csv
