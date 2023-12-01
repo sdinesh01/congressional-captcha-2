@@ -10,6 +10,7 @@ tika = "*"
 ipython = "*"
 streamlit = "*"
 streamlit-scrollable-textbox = "*"
+install-jdk = "*"
 
 [dev-packages]
 

@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "c612a2271cab5b7612e9db82ba2b289ef9bc5558ef9159edcfe38754f6e499dd"
+            "sha256": "818c492396833bbb9acde1123cc3fd3005c67560dd84fae69a3026b45e8a282c"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -222,6 +222,15 @@
             ],
             "markers": "python_version >= '3.8'",
             "version": "==6.9.0"
+        },
+        "install-jdk": {
+            "hashes": [
+                "sha256:2bfd53caf660e4916df0215a5715519dcb9547fa2a5f07421fd97a8046851eaa",
+                "sha256:b63f0fcd63f7abab3443d4120ba92716397753b8a8ea3c85762a629925a9936e"
+            ],
+            "index": "pypi",
+            "markers": "python_version >= '3.6' and python_version < '4.0'",
+            "version": "==1.1.0"
         },
         "ipython": {
             "hashes": [
