@@ -149,7 +149,7 @@ class MyDB:
         
         df_not_nan = df.loc[df['url'].notnull()]
         
-        sample_df = df_not_nan.groupby(["state"]).sample(n=5, random_state=1)
+        sample_df = df_not_nan.groupby(["state"]).groupby(["session"].sample(n=5, random_state=1)
 
         try:
             for i, row in enumerate(sample_df.to_dict(orient='records')):
