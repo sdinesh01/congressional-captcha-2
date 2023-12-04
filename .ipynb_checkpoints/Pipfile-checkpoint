@@ -4,6 +4,18 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+pandas = "*"
+requests = "*"
+tika = "*"
+ipython = "*"
+streamlit = "*"
+streamlit-scrollable-textbox = "*"
+install-jdk = "*"
+pyspark = "==3.1.2"
+scikit-learn = "*"
+matplotlib = "*"
+numpy = "*"
+spacy = "*"
 
 [dev-packages]
 

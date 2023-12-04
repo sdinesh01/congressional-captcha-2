@@ -11,6 +11,12 @@ ipython = "*"
 streamlit = "*"
 streamlit-scrollable-textbox = "*"
 install-jdk = "*"
+pyspark = "*"
+scikit-learn = "*"
+matplotlib = "*"
+numpy = "*"
+spacy = "*"
+spacy-streamlit = "*"
 
 [dev-packages]
 

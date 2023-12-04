@@ -7,10 +7,14 @@ import streamlit as st
 import streamlit_scrollable_textbox as stx
 import io
 import time
+import spacy
+#from spacy import displacy
+from spacy_streamlit import visualize_ner
 
 class MyApp:
     def __init__(self):
         self.db = self.build_database()
+        self.nlp = self.build_model()
         self.build_page()
         return
 
@@ -46,6 +50,11 @@ class MyApp:
         time.sleep(3) # Wait for 3 seconds
         success.empty() # Clear the alert
         return _self.db
+    
+    @st.cache_resource(show_spinner=False)
+    def build_model(_self): 
+        _self.nlp = spacy.load("en_core_web_sm")
+        return _self.nlp
     
     def select_state(self): 
         self.states = self.db.run_query('SELECT DISTINCT state FROM tBills;')['state'].tolist()
@@ -93,7 +102,7 @@ class MyApp:
     
     def get_bill_text(self):
         self.retrieve_bill_text()
-        self.query = """ SELECT content 
+        self.query = """ SELECT title, content 
                         FROM tBills
                         WHERE state = (?) AND session = (?)
                         ;"""
@@ -123,9 +132,13 @@ class MyApp:
                 else: 
                     pass
             else: 
-                return stx.scrollableTextbox(results.iloc[0]['content'], height=400)
+               # return stx.scrollableTextbox(displacy.render(self.nlp(results.iloc[0]['content']),style='ent'), height=700)
+                text = results.iloc[0]['content']
+                doc = self.nlp(text)
+                #return st.components.v1.html(displacy.render(doc,style='ent'),height=500 , scrolling=True)
+                visualize_ner(doc, labels=self.nlp.get_pipe("ner").labels)
         else: 
-            for i in range(results.shape[0]): 
+            for i, x in enumerate(range(results.shape[0])): 
                 if (results.iloc[0]['content'] is None):
                     if errors.iloc[0]['error'] == 'connection': 
                         return st.error("We could not retreive the contents of this bill due to a connection error. Check if the from " +
@@ -145,7 +158,12 @@ class MyApp:
                     else: 
                         pass
                 else: 
-                    return stx.scrollableTextbox(results.iloc[i]['content'], height=400)
+                    try: 
+                        text = results.iloc[i]['content']
+                        doc = self.nlp(text)
+                        visualize_ner(doc, labels=self.nlp.get_pipe("ner").labels, key=x)
+                    except: 
+                        st.error('The bill titled "' + str(results.iloc[i]['title']) + '" could not be visualized.')
 
     def streamlit_defaults(self):
         '''

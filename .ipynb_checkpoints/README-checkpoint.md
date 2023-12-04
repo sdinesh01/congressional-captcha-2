@@ -9,7 +9,8 @@ To run this application:
 1. Clone this repository
 2. Create a virtual environment:  `pipenv shell `
 3. Install dependencies: `pipenv install --ignore-pipfile`
-4. Run: `streamlit run main_app.py`
+4. Run: `python -m spacy download en_core_web_sm`
+5. Run: `streamlit run main_app.py`
 *The application should open in your browser*
 
 The full version of this project will include the text processing and visualization elements.
