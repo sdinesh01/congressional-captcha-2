@@ -32,13 +32,17 @@ class MyApp:
             self.get_bills()
             with st.spinner('Retrieving text...'): 
                 if self.results.iloc[0]['content'] is None: 
+                    self.create_ner_info_table()
                     self.get_bill_text()
+                 
                 else: 
                     main_screen.empty()
                     with main_screen.container():
                         self.refresh_bills_dataframe()
+                        self.create_ner_info_table()
                         self.get_bill_text()
-        
+                        
+                        
         self.streamlit_defaults()
         return
     
@@ -55,6 +59,12 @@ class MyApp:
     def build_model(_self): 
         _self.nlp = spacy.load("en_core_web_sm")
         return _self.nlp
+    
+    def create_ner_info_table(_self): 
+        with st.sidebar.expander('spaCy named entity recognition labels'): 
+            mod_help_text = pd.DataFrame({'Label':['PERSON', 'NORP', 'FAC','ORG','GPE','LOC','PRODUCT','EVENT','WORK_OF_ART','LAW','LANGUAGE','DATE','TIME','PERCENT','MONEY','QUANTITY','ORDINAL','CARDINAL'], 'Description': ['People, including fictional','Nationalities or religious or political groups','Buildings, airports, highways, bridges, etc.','Companies, agencies, institutions, etc.','(Geopolitical entities) Countries, cities, states','Non-GPE locations, mountain ranges, bodies of water','Objects, vehicles, foods, etc. (Not services.)','Named hurricanes, battles, wars, sports events, etc.','Titles of books, songs, etc.',' Named documents made into laws','Any named language','Absolute or relative dates or periods ','Times smaller than a day','Percentage, including ”%“',' Monetary values, including unit','Measurements, as of weight or distance','“first”, “second”, etc.','Numerals that do not fall under another type']})
+            st.table(mod_help_text)
+            return 
     
     def select_state(self): 
         self.states = self.db.run_query('SELECT DISTINCT state FROM tBills;')['state'].tolist()
@@ -132,24 +142,22 @@ class MyApp:
                 else: 
                     pass
             else: 
-               # return stx.scrollableTextbox(displacy.render(self.nlp(results.iloc[0]['content']),style='ent'), height=700)
                 text = results.iloc[0]['content']
                 doc = self.nlp(text)
-                #return st.components.v1.html(displacy.render(doc,style='ent'),height=500 , scrolling=True)
                 visualize_ner(doc, labels=self.nlp.get_pipe("ner").labels)
         else: 
             for i, x in enumerate(range(results.shape[0])): 
-                if (results.iloc[0]['content'] is None):
-                    if errors.iloc[0]['error'] == 'connection': 
+                if (results.iloc[i]['content'] is None):
+                    if errors.iloc[i]['error'] == 'connection': 
                         return st.error("We could not retreive the contents of this bill due to a connection error. Check if the from " +
                                         str(self.state_choice) + "'s " + str(self.session_choice) + " session docket has moved.") 
-                    elif errors.iloc[0]['error'] == 'bad_url':
+                    elif errors.iloc[i]['error'] == 'bad_url':
                         return st.error("We could not retreive the contents of this bill due to a bad url. Check if the from " +
                                         str(self.state_choice) + "'s " + str(self.session_choice) + " session docket has moved.")
-                    elif errors.iloc[0]['error'] == 'timeout':
+                    elif errors.iloc[i]['error'] == 'timeout':
                         return st.error("We could not retreive the contents of this bill due to session timeout. Check if the from " +
                                         str(self.state_choice) + "'s " + str(self.session_choice) + " session docket has moved.")
-                    elif errors.iloc[0]['error'] == 'tika':
+                    elif errors.iloc[i]['error'] == 'tika':
                         try: 
                             self.retrieve_bill_text()
                         except: 
@@ -161,7 +169,7 @@ class MyApp:
                     try: 
                         text = results.iloc[i]['content']
                         doc = self.nlp(text)
-                        visualize_ner(doc, labels=self.nlp.get_pipe("ner").labels, key=x)
+                        visualize_ner(doc, labels=self.nlp.get_pipe("ner").labels, key=x, title='Bill text: ' +results.iloc[i]['title'])
                     except: 
                         st.error('The bill titled "' + str(results.iloc[i]['title']) + '" could not be visualized.')
 
