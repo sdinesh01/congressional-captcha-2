@@ -1,6 +1,6 @@
 # congressional-captcha
 
-I've pared down the scope of the original project to only focus on state and federal legislation (no longer looking at ALEC) for the time being. This repo produces a streamlit web application you can use to quickly summarize keywords and topics from legislation using parts of speech selectors, dropdowns, and interactive tables. Users are able to select legislation by state (including D.C. and U.S. Congress) and by legislative session. Background processes will attempt to retreive the bill from the state website using Apache Tika. 
+I've pared down the scope of the original project to only focus on state and federal legislation (no longer looking at ALEC) for the time being. This repo produces a streamlit web application you can use to quickly summarize keywords and topics from legislation using parts of speech selectors, dropdowns, and interactive tables. Users are able to select legislation by state (including D.C. and U.S. Congress) and by legislative session. Background processes will attempt to retreive the bill from the state website using Apache Tika. I have implemented spaCy's named entity recognition methods for text analysis.
 
 **You will need to have [Java 8](https://www.java.com/en/download/manual.jsp) installed to run this app.**
 
