@@ -24,11 +24,17 @@ To run this application:
 ### Files in this repository
 
 `main_app.py`: run this file to open the streamlit app
+
 `my_app.py`: contains class `MyApp`, which includes all elements of the streamlit webpage
+
 `legiscan.py`: code in this file is from [pylegiscan](https://github.com/poliquin/pylegiscan/tree/master/pylegiscan).     interacts with the Legiscan API. You will need to obtain an API key to fetch your own data. This file is set up to retrieve data for all available states and legislative sessions.
+
 `fetch_data.py`: automates the process of retreiving data with `legiscan.py` and produces a .csv file. I wrote a short program, not included in this repository, to split the large file by state for the purpose of sharing data on GitHub.
+
 `create_database.py`: reads in all .csv files in data/... as a Pandas dataframe and creates a SQLite3 database from a randomly sampled subset of the dataframe (currently 5 bills per state)  
+
 `sql_queries.py`: SQL queries as strings. Used to create tables in the dataframe and update the entries of the table (tBills) in the database when text is accessed via `bill_text.py`.
+
 `bill_text.py`: contains class `Bill`, which is used to retrieve bill text from state websites using Tika (Java 8 required)
 
 `data/...` : contains .csv files of all bill titles and urls from legislative sessions from all states and U.S. Congress. The original csv files *do not* contain the actual text of the bill. The data folder also contains legislation.db, which is created by `create_database.py`.
