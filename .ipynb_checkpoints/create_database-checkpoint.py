@@ -24,8 +24,8 @@ class MyDB:
     any_drop: if any tables is true, rebuild tables (default bool = False)
     input_lim: this parameter is currently out of use, since we are not creating a database directly with a single csv file. (default: int = None) 
     chunk_size: this parameter is currently out of use, since we are not creating a database directly with a single csv file. (default: int = None)
-    
     '''
+    
     def __init__(self,
                  add_data:bool = False,
                  table_type: str = None,
@@ -35,8 +35,8 @@ class MyDB:
                  chunk_size: int = None
                 ):
         
-        self.path_data = os.path.join(os.path.dirname(__file__), 'data')
-        self.path_db = os.path.join(self.path_data, 'legislation.db')
+        self.path_data = os.path.join(os.path.dirname(__file__), 'data') #path to the data
+        self.path_db = os.path.join(self.path_data, 'legislation.db') # create a path for legislation.db in the data folder
         self.add_data = add_data
         self.table_type = table_type
         self.bills_drop = bills_drop
@@ -104,7 +104,6 @@ class MyDB:
         df['error'] = np.nan
         df['content'] = np.nan
         df['processed_at'] = np.nan
-   
         return df
     
     def build_tables(self):
@@ -132,7 +131,6 @@ class MyDB:
 
         clear_output(wait=True)
         print('tables built!')
-
         return True
     
     def get_tables(self):
@@ -190,7 +188,6 @@ class MyDB:
             print(row)
             # Print the exception information
             traceback.print_exc()
-
         return
     
     # this function is only intended to be used after this project is adapted
