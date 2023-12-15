@@ -24,8 +24,6 @@ class FetchData:
         self.num_datasets = num_datasets
         self.PATH_OUT = PATH_OUT
         self.check_directories()
-        #self.create_test_dataset_list()
-        #self.decode_test_dataset()
         self.find_json()
         self.process_json()
         self.create_dataframe()
