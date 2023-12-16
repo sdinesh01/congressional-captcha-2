@@ -145,7 +145,7 @@ class MyApp:
             else: 
                 text = results.iloc[0]['content']
                 doc = self.nlp(text)
-                visualize_ner(doc, labels=self.nlp.get_pipe("ner").labels)
+                visualize_ner(doc, labels=self.nlp.get_pipe("ner").labels, title = ' ')
         else: 
             for i, x in enumerate(range(results.shape[0])): 
                 with st.expander(str(results.iloc[i]['title'])):
@@ -171,7 +171,7 @@ class MyApp:
                         try: 
                             text = results.iloc[i]['content']
                             doc = self.nlp(text)
-                            visualize_ner(doc, labels=self.nlp.get_pipe("ner").labels, key=x, title='Bill text: ' +results.iloc[i]['title'])
+                            visualize_ner(doc, labels=self.nlp.get_pipe("ner").labels, key=x, title= ' ')
                         except: 
                             st.error('The bill titled "' + str(results.iloc[i]['title']) + '" could not be visualized.')
 
