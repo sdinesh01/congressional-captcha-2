@@ -9,12 +9,16 @@ from IPython.display import clear_output
 USE_OCR = False
 
 class Bill:
+    '''
+    After querying the database by state and legislative session, we need to retrieve the actual text for each bill. For all of the unprocessed rows, we'll retrieve the URL and try to get the text from the file format that it's pointing at (PDF, Word doc, HTML page, etc). If it's successful, we'll save that into the contents column. If we fail, we'll try to update the error column instead. The processed_at column will update with a timestamp for when we attempted to fetch the data.
+    '''
 
     def __init__(self, bill_id, url, conn):
         self.bill_id = bill_id,
         self.url = url
         try:
-            # A little cleaning for URLs that have moved domains
+            # A little cleaning for URLs that have moved domains -- this is NOT comprehensive
+            # identifying broken or moved URLs is part of the exploratory data utility of the final webapp
             self.url = self.url.replace("www.rilin.state.ri.us", "webserver.rilin.state.ri.us")
             self.url = self.url.replace('legis.sd.gov', 'sdlegislature.gov')
         except:
@@ -61,6 +65,7 @@ class Bill:
         
     @classmethod
     def get(cls, conn, bill_id):
+        '''get the bill_id and url of a particular bill from the legislation.db database'''
         results = conn.execute("""
             SELECT bill_id, url
             FROM tBills
@@ -74,6 +79,7 @@ class Bill:
         
     @classmethod
     def unprocessed(cls, conn, limit=10):
+        '''retrieve the unprocessed bills for the inputed state and session'''
         selected_state = self.state
         selected_session = self.session
         results = conn.execute("""
@@ -87,6 +93,7 @@ class Bill:
     
     @classmethod
     def process_queue(cls, conn, limit=10):
+        '''process bills that are yet to be updated'''
         selected_state = self.state
         selected_session = self.session
         todo = Bill.unprocessed(conn, self, limit)
