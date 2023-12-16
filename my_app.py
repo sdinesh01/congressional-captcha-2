@@ -5,6 +5,7 @@ import bill_text
 import pandas as pd
 import streamlit as st
 import streamlit_scrollable_textbox as stx
+import streamlit_nested_layout
 import io
 import time
 import spacy
@@ -147,31 +148,32 @@ class MyApp:
                 visualize_ner(doc, labels=self.nlp.get_pipe("ner").labels)
         else: 
             for i, x in enumerate(range(results.shape[0])): 
-                if (results.iloc[i]['content'] is None):
-                    if errors.iloc[i]['error'] == 'connection': 
-                        return st.error("We could not retreive the contents of this bill due to a connection error. Check if the from " +
-                                        str(self.state_choice) + "'s " + str(self.session_choice) + " session docket has moved.") 
-                    elif errors.iloc[i]['error'] == 'bad_url':
-                        return st.error("We could not retreive the contents of this bill due to a bad url. Check if the from " +
-                                        str(self.state_choice) + "'s " + str(self.session_choice) + " session docket has moved.")
-                    elif errors.iloc[i]['error'] == 'timeout':
-                        return st.error("We could not retreive the contents of this bill due to session timeout. Check if the from " +
-                                        str(self.state_choice) + "'s " + str(self.session_choice) + " session docket has moved.")
-                    elif errors.iloc[i]['error'] == 'tika':
-                        try: 
-                            self.retrieve_bill_text()
-                        except: 
-                            return st.error("We could not retreive the contents of this bill due to an Apache Tika error. Check if the from " +
-                                        str(self.state_choice) + "'s " + str(self.session_choice) + " session docket has moved.")
+                with st.expander(str(results.iloc[i]['title'])):
+                    if (results.iloc[i]['content'] is None):
+                        if errors.iloc[i]['error'] == 'connection': 
+                            return st.error("We could not retreive the contents of this bill due to a connection error. Check if the from " +
+                                            str(self.state_choice) + "'s " + str(self.session_choice) + " session docket has moved.") 
+                        elif errors.iloc[i]['error'] == 'bad_url':
+                            return st.error("We could not retreive the contents of this bill due to a bad url. Check if the from " +
+                                            str(self.state_choice) + "'s " + str(self.session_choice) + " session docket has moved.")
+                        elif errors.iloc[i]['error'] == 'timeout':
+                            return st.error("We could not retreive the contents of this bill due to session timeout. Check if the from " +
+                                            str(self.state_choice) + "'s " + str(self.session_choice) + " session docket has moved.")
+                        elif errors.iloc[i]['error'] == 'tika':
+                            try: 
+                                self.retrieve_bill_text()
+                            except: 
+                                return st.error("We could not retreive the contents of this bill due to an Apache Tika error. Check if the from " +
+                                            str(self.state_choice) + "'s " + str(self.session_choice) + " session docket has moved.")
+                        else: 
+                            pass
                     else: 
-                        pass
-                else: 
-                    try: 
-                        text = results.iloc[i]['content']
-                        doc = self.nlp(text)
-                        visualize_ner(doc, labels=self.nlp.get_pipe("ner").labels, key=x, title='Bill text: ' +results.iloc[i]['title'])
-                    except: 
-                        st.error('The bill titled "' + str(results.iloc[i]['title']) + '" could not be visualized.')
+                        try: 
+                            text = results.iloc[i]['content']
+                            doc = self.nlp(text)
+                            visualize_ner(doc, labels=self.nlp.get_pipe("ner").labels, key=x, title='Bill text: ' +results.iloc[i]['title'])
+                        except: 
+                            st.error('The bill titled "' + str(results.iloc[i]['title']) + '" could not be visualized.')
 
     def streamlit_defaults(self):
         '''

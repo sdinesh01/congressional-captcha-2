@@ -17,6 +17,7 @@ matplotlib = "*"
 numpy = "*"
 spacy = "*"
 spacy-streamlit = "*"
+streamlit-nested-layout = "*"
 
 [dev-packages]
 
