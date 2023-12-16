@@ -20,6 +20,8 @@ To run this application:
 
 *The application should open in your browser*
 
+![](https://github.com/sdinesh01/congressional-captcha-2/blob/main/main-app-Streamlit%20(2).gif?raw=true)
+
 ---
 ### Files in this repository
 

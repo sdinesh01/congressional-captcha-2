@@ -20,7 +20,7 @@ To run this application:
 
 *The application should open in your browser*
 
-[](http://www.reactiongifs.us/wp-content/uploads/2013/10/nuh_uh_conan_obrien.gif)
+![](https://github.com/sdinesh01/congressional-captcha-2/blob/main/main-app-Streamlit%20(2).gif?raw=true)
 
 ---
 ### Files in this repository
