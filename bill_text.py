@@ -6,7 +6,7 @@ from tika import parser
 from IPython.display import clear_output
 
 # Should we use OCR if normal processing fails?
-USE_OCR = True
+USE_OCR = False
 
 class Bill:
 
